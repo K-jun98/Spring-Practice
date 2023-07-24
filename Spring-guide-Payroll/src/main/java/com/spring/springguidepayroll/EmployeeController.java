@@ -1,5 +1,6 @@
 package com.spring.springguidepayroll;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class EmployeeController {
         return employeeRepository.findAll();
     }
 
-    @PostMapping("/employees")
+    @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Employee newEmployee(@RequestBody Employee newEmployee) {
         return employeeRepository.save(newEmployee);
     }
