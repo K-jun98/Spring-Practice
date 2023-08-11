@@ -1,0 +1,85 @@
+buildscript {
+    ext {
+        restdocsApiSpecVersion = '0.17.1' // restdocsApiSpecVersion 버전 변수 설정
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.2'
+    id 'io.spring.dependency-management' version '1.1.0'
+    //restdocs-api-spec → restdocs extension  포함함
+    id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+
+    //swagger generator 플러그인 추가
+    id 'org.hidetake.swagger.generator' version '2.18.2'
+}
+
+group = 'sample'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:' + restdocsApiSpecVersion
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Task 및 설정 추가
+// GenerateSwaggerUI 태스크가, openapi3 task 를 의존하도록 설정
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+
+    //기존 파일 삭제했다가, build 에 출력한 json 정적파일 복사 (안해도 됨 → local 확인용)
+    delete file('src/main/resources/static/docs/')
+    copy {
+        from "build/resources/main/static/docs"
+        into "src/main/resources/static/docs/"
+    }
+}
+
+openapi3 {
+    server = "http://localhost:8080"
+    title = "THT API 문서"
+    description = "Spring REST Docs with SwaggerUI."
+    version = "0.0.1"
+    outputFileNamePrefix = 'open-api-3.0.1'
+    format = 'json'
+
+    // /static/docs/open-api-3.0.1.json 생성 → jar 파일만 배포할 예정이기에 build 에 출력
+    outputDirectory = 'build/resources/main/static/docs'
+}
+
+//openAPI 작성 자동화를 위해 패키징 전에 openapi3 테스크 선실행을 유발
+bootJar {
+    dependsOn(':openapi3')
+}

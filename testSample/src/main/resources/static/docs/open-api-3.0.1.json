@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "THT API 문서",
+    "description": "Spring REST Docs with SwaggerUI.",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/api/v1/products/new": {
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "operationId": "product-create",
+        "requestBody": {
+          "content": {
+            "application/json;charset=UTF-8": {
+              "schema": {
+                "$ref": "#/components/schemas/api-v1-products-new631074676"
+              },
+              "examples": {
+                "product-create": {
+                  "value": "{\"type\":\"HANDMADE\",\"sellingStatus\":\"SELLING\",\"name\":\"아메리카노\",\"price\":4000}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/api-v1-products-new1466521534"
+                },
+                "examples": {
+                  "product-create": {
+                    "value": "{\"id\":1,\"productNumber\":\"001\",\"type\":\"HANDMADE\",\"sellingStatus\":\"SELLING\",\"name\":\"아메리카노\",\"price\":4000}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "api-v1-products-new1466521534": {
+        "type": "object",
+        "properties": {
+          "sellingStatus": {
+            "type": "string",
+            "description": "상품 싱태"
+          },
+          "price": {
+            "type": "number",
+            "description": "가격"
+          },
+          "name": {
+            "type": "string",
+            "description": "상품 이름"
+          },
+          "productNumber": {
+            "type": "string",
+            "description": "상품 번ㄸ"
+          },
+          "id": {
+            "type": "number",
+            "description": "상품 아이디"
+          },
+          "type": {
+            "type": "string",
+            "description": "상품 타입"
+          }
+        }
+      },
+      "api-v1-products-new631074676": {
+        "type": "object",
+        "properties": {
+          "sellingStatus": {
+            "type": "string",
+            "description": "상품 타입"
+          },
+          "price": {
+            "type": "number",
+            "description": "상품 가격"
+          },
+          "name": {
+            "type": "string",
+            "description": "상품 이름"
+          },
+          "type": {
+            "type": "string",
+            "description": "상품 타입"
+          }
+        }
+      }
+    }
+  }
+}
