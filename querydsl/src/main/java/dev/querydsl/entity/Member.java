@@ -3,6 +3,8 @@ package dev.querydsl.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -33,6 +35,18 @@ public class Member {
         if (team != null) {
             changeTeam(team);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Member member)) return false;
+        return age == member.age && Objects.equals(username, member.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, age);
     }
 
     public void changeTeam(Team team) {
